@@ -1,292 +1,358 @@
-#include <vector>
-#include <sstream>
-#include <string>
 #include <iostream>
+#include <cstdlib>
+#include <sstream>
 #include <algorithm>
+#include <random>
 #include "mastermindDrive.h"
 #include "mainGame.h"
-#include <cstdlib>
 using namespace std;
 
-void ASCIIart(){
-    cout << " ___ ___    ____   _____   ______     ___   ____    ___ ___   ____   ____    ___ \n" <<      
-            " |   |   |  /    | / ___/  |      |   /  _] |    |  |   |   | |    | |    |  |   | \n" <<   
-            " | _   _ | |  o  (    |_   |      |  /  [_  |  D  ) | _   _ |  |  |  |  _  | |    | \n" <<    
-            " |  |_/  | |     | |__  |  |_|  |_| |    _] |    /  |  |_/  |  |  |  |  |  | |  D  | \n" <<   
-            " |   |   | |  _  | /  | |    |  |   |   [_  |    |  |   |   |  |  |  |  |  | |     | \n" <<   
-            " |   |   | |  |  | |    |    |  |   |     | |  .  | |   |   |  |  |  |  |  | |     | \n" <<   
-            " |___|___| |__|__|  |___|    |__|   |_____| |__||_| |___|___| |____| |__|__| |_____| \n" << endl;
-}
 
 int main(){
-    MastermindLayout* Curr = NULL;
-    MastermindLayout* SavedGame = NULL;
-    bool end = false;
-    char UserChoice;
+	MastermindLayout * CurrentPlay = nullptr;
+	MastermindLayout * OldGame = nullptr;
+	char UserChoice;
+	bool endGame = false;
 
-    do{
-        ASCIIart();
-        cout << "P/p - play game\n";
-        cout << "C/c - continue current game\n";
-        cout << "L/l - load current game\n";
-        cout << "E/e - exit\n";
+	do{
+		cout << endl;
+        asciiArt();
+		cout << "p/P - play game \n"
+            << "l/L - load game \n"
+            << "c/C - continue game \n"
+            << "q/Q - quit game " << endl;
 
-        cin >> UserChoice;
-        cin.ignore();
-        switch(toupper(UserChoice)){
-            case 'P':
-                setup(Curr, SavedGame);
-                play(Curr, SavedGame);
-                break;
+		cin >> UserChoice;
+		cin.ignore(); //extra to prevent skipping
+		switch (toupper(UserChoice))
+		{
+			case 'P':
+				setup(CurrentPlay, OldGame);
+				play(CurrentPlay, OldGame);
+				break;
 
-            case 'C':
-                play(Curr, SavedGame);
-                break;
+			case 'C':
+				play(CurrentPlay, OldGame);
+				break;
 
-            case 'L':
-                load(Curr, SavedGame);
-                play(Curr, SavedGame);
-                break;
+            case 'L': 
+				load(CurrentPlay, OldGame);
+				play(CurrentPlay, OldGame);
+				break;
 
-            case 'E':
-                end = true;
-                break;
-        
-            default:
-                cout << "Wrong choice, please enter the choice again '\n";
-                break;
-        }
-    }while(end == false);
+			case 'Q':
+				endGame = true;
+				break;
 
-    if(Curr != NULL){
-        delete Curr;
-    }
-    if(SavedGame != NULL){
-        delete SavedGame;
-    }
+			default:
+				cout << "Wrong option. Choose again" << endl;
+				break;
+		}
+	}while(!endGame);
 
-    cout << endl;
-    cout << "Thank you for trying the game. Hope that you enjoy the game \n";
+	//deallocate the objects if any are still left after
+	//user decides to quit
+	if (CurrentPlay != nullptr)
+		delete CurrentPlay;
 
-    return 0;
+	if (OldGame != nullptr)
+		delete OldGame;
+
+	cout << endl;
+	cout << "Thank you for trying. Hope you like the game" << endl;
+
+	return 0;
 }
 
-void setup(MastermindLayout*& current, MastermindLayout*& saved){
-    /*string line, color;
-    vector<string> userChoice;
-    char YesNo;
+/*setup - this function creates a new game
 
-    cout << endl;
-    cout << "Enter the peg color with 0 at the end \n";
-    while(cin >> line){
-        while(line.length() <= 1 && userChoice.size() == 0){
-            cout << "Sorry! The game need at least 1 pegs color to play. Please enter again \n";
-            cin >> line;
-        }
-        if(line == "0" && userChoice.size() > 0){
-            break;
-        }
-        userChoice.push_back(UpperString(line));
-    }*/
+	MastermindLayout*& CurrentPlay - points to a MastermindLayout object of the current game in play
+	MastermindLayout*& OldGame - points toaMastermindLayoutobject of a saved game.
+	return void
 
-    string Color[10] = {"yellow", "green", "blue", "red", "black", "white", "orange", "grey", "brown", "pink"};
+	Algorithm - using while loop to take user input and only break if user input is = and player size > 0.
+	If user input is 0 and less size == 0, then output messages and repromp the user until they enter correct format.
+	After that, pushback user input into vector. Check to see if CurrentPlay is nullptr or not. 
+	If there is a current game in progress, ask the user if they wish to save the game using yes/no function, 
+	if they wish to save the game call the save function 
+	if the save function did not actually save the game then exit the setup function, 
+	otherwise Allocate a new game to CurrentPlay pointer by passing the vector  to the constructor and return
+	If there is a current game in progress, and the user does not want to save the game, 
+	deallocatethe CurrentPlay and Allocate a new game to CurrentPlay pointer by passing the vector  to the constructor .  
+	Allocate a new game to CurrentPlay pointer by passing the vector  to the constructor
+
+*/
+
+void setup(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame){
+    string Color[10] = {"yellow", "green", "blue", "red", "red", "blue", "green", "yellow", "white", "white"};
     char YesNo;
     vector<string> ColorVec;
-    vector<string> userChoice;
+    vector<string> UserChoice;
     srand(time(NULL));
-    int randNum = rand() % 10;
+    int randNum = (rand() % 5) + 1;
 
-    for(unsigned int i = 0; i < randNum; i++){
+    for(size_t i = 0; i < randNum; i++){
         ColorVec.push_back(Color[i]);
     }
-    random_shuffle(ColorVec.begin(), ColorVec.end());
+    auto seed = default_random_engine();
+    shuffle(begin(ColorVec), end(ColorVec), seed);
     
-    userChoice = ColorVec;
-    for(int i = 0; i < userChoice.size(); i++){
-        cout << userChoice[i] << endl;
+    UserChoice = ColorVec;
+    //test
+    for(int i = 0; i < UserChoice.size(); i++){
+        cout << UserChoice[i] << endl;
     }
 
-    if(current == NULL){
-        current = new MastermindLayout(userChoice);
-        return;
-    }
-    if(current != NULL){
-        cout << endl;
-        cout << "You have a game right now \n";
-        cout << "So do you like to save the current game \n"; 
-        cout << "Y/y to save and N/n to not save \n";
+	if(CurrentPlay == nullptr){
+		CurrentPlay = new MastermindLayout(UserChoice); 
+		return;
+		
+	}else{
+		cout << endl;
+		cout << "One game in progress" << endl;
+		cout << "Would you like to save this game?" << endl;
 
-        cin >> YesNo;
-        
-        while(toupper(YesNo) != 'Y' || toupper(YesNo) != 'N'){
-            if(toupper(YesNo) == 'Y'){
-                save(current, saved);
-                cout << "Saving current game right now... \n";
-            }
-            if(toupper(YesNo) == 'N'){
-                delete current;
-                current = new MastermindLayout(userChoice);
-                return;
-            }
-        }
+		if (yesOrNo("(Y/N): ")){
+			save(CurrentPlay, OldGame); 
+			cout << "Saving current game..." << endl;
+		}else{
+			delete CurrentPlay;
+			CurrentPlay = new MastermindLayout(UserChoice);
+			return;
+		}
 
-        if(current != NULL){
-            return;
-        }else{
-            delete current;
-            current = new MastermindLayout(userChoice);
-        }
-    }
+		if(CurrentPlay != nullptr){ // to check if the save function actually work or not
+			//saved game rn will have address of previous current
+			return;
+		}else{
+			delete CurrentPlay;
+			CurrentPlay = new MastermindLayout(UserChoice);
+		}
+	}
 }
 
-void save(MastermindLayout*& current, MastermindLayout*& saved){
-    if(saved == NULL){
-        saved = current;
-        current = NULL;
-        return;
-    }
-    if(saved != NULL){
-        cout << endl;cout << "Saving current game" << endl;
-        cout << "There is a saved game" << endl;
-        cout << "This action will destroy/overwrite previously saved game. Is this ok?" << endl;
-        
-        cout << "Y/y or N/n" << endl;
-        char YesNo;
-        cin >> YesNo;
-        
-        while(toupper(YesNo) != 'Y' || toupper(YesNo) != 'N'){
-            if(tolower(YesNo) == 'y'){
-                delete saved;
-                saved = current;
-                current = NULL;
-            }
-            if(tolower(YesNo) == 'n'){
-                return;
-            }
-        }
-    }
+/*save - this function saves a current game
+	MastermindLayout*& CurrentPlay - points to a MastermindLayout object of the current game in play
+	MastermindLayout*& OldGame - points toaMastermindLayoutobject of a saved game.
+	return void
+
+	Algorithm - If there is no saved game, set save to CurrentPlay and assign CurrentPlay to nullptr and exit function
+	If there is a saved game, ask the user if they still want to save over the OldGame using yes/no function
+	if they want to save over, deallocate OldGame and set it to CurrentPlay, then set CurrentPlay to nullptr
+	If the user does not want to save the game then do nothing and exit from the function
+
+*/
+
+void save(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame){
+	if(OldGame == nullptr){
+		OldGame = CurrentPlay;
+		CurrentPlay = nullptr;
+		// if nullptr then we will save it and not nullptr, we will override the previous game
+		return;
+	}else{
+		cout << endl;
+		cout << "Saving this game..." << endl;
+		cout << "There is a saved game in data" << endl;
+		cout << "This will destroy/overwrite old game. Do you want to continue?" << endl;
+
+		if (yesOrNo("(Y/N): ")){
+			delete OldGame;
+			OldGame = CurrentPlay;
+			CurrentPlay = nullptr;
+		}else{
+			return;
+		}
+	}
 }
 
-void load(MastermindLayout*& current, MastermindLayout*& saved){
-    if(saved == NULL){
-        cout << endl;
-        cout << "No game to load. \n" << endl;
-        return;
-    }
 
-    else if(saved != NULL){
-        if(current == NULL){
-            current = saved;
-            saved = NULL;;
-            return;
-        }
-        else{
-            cout << endl;
-			cout << "This  will destroy current game and cant be undone." << endl;
-			cout << "Do you  wish to  continue?" << endl;
-            char YesNo;
-            cin >> YesNo;
+/*save - this function load a current game and save game
+	MastermindLayout*& CurrentPlay - points to a MastermindLayout object of the current game in play
+	MastermindLayout*& OldGame - points toaMastermindLayoutobject of a saved game.
+	return void
 
-            while(toupper(YesNo) != 'Y' || toupper(YesNo) != 'N'){
-                if(tolower(YesNo) == 'y'){
-                    cout << "Loading game" << endl;
-                    delete current;
-                    current = saved;
-                    saved = NULL;
-                }
-                if(tolower(YesNo) == 'n'){
-                    return;
-                }
-            }
-        }
-    }
+	Algorithm - If there is no saved game, exit out of the function
+	If there is a current game, ask the user if they wish to destroy this game with yes/no function
+	If they do, destroy the game and Set current game with the game in saved game and set saved game to nullptr
+	If they do not wish to destroy the current game, then exit the function
+
+*/
+void load(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame)
+{
+
+	if(OldGame == nullptr){
+		cout << endl;
+		cout << "There is no game to load. Unable to complete the task. \n" << endl;
+		return;
+	}else{ 
+		if(CurrentPlay == nullptr){
+			CurrentPlay = OldGame;
+			OldGame = nullptr;
+			return; 
+		}else{
+			cout << endl;
+			cout << "This will destroy this game." << endl;
+			cout << "This can't be undo." << endl;
+			cout << "Are you sure you want to continue?" << endl;
+
+			if (yesOrNo("(Y/N): ")){
+				cout << "Loading game..." << endl;
+				delete CurrentPlay;
+				CurrentPlay = OldGame;
+				OldGame = nullptr; 
+			}else{
+				return;
+			}
+		}
+	}
 }
 
-void play(MastermindLayout*& current, MastermindLayout*& saved){
-    vector<string> UserChoice;
-    string guess;
-    string newGuess;
-    int gold = 0;
-    int silver = 0;
-    int UserMove = 0;
-    bool stop = false;
+
+/*yesOrNo- all this function does prompt the user by outputting msg and re-prompts if the user does not enter Y/y or N/n, 
+	string msg - user input
+	returns true if the user entered Y/y and returns false if they entered N/n.
+
+	Algorithm - this function is written by professor
+
+*/
+bool yesOrNo(string msg)
+{
+	char UserChoice;
+
+	cout << endl;
+
+	do
+	{
+		cout << msg;
+		cin >> UserChoice;
+		UserChoice = toupper(UserChoice);
+	}
+	while (UserChoice != 'Y' && UserChoice != 'N');
+
+	return UserChoice == 'Y';
+}
+
+/*play- user interact to play the game
+	MastermindLayout*& CurrentPlay - points to a MastermindLayout object of the current game in play
+	MastermindLayout*& OldGame - points toaMastermindLayoutobject of a saved game.
+	return void
+
+	Algorithm- using outer while loop to continue loop if the playermove that take return value from move() == 0
+	Inside while loop, check if CurrentPlay is nullptr or not. If nullptr, output error, and return. Otherwise, prompt the user
+	using getMOveIndex() and getNumberOfColumn. Then using for loop to loop through solution size and get user input.
+	If user input is p/P then flag and break. Otherwise, push input into vector.
+	Outside the for loop, if flag then ask user if they want to save the game or not. If yes, save game by save() and return
+	If no, return and do nothing to current and saved game. 
+	If not flag, check to see if vector is equal solution size or not. If yes, get return value from move() 
+	and output goldPegs and siver. Then clear the vector
+	-If playermove is 1 = user win, output messange, delete CurrentPlay, set CurrentPlay to nullptr and return
+	-If playerMove is -1 = user lose, output messange, delete CurrentPlay, set CurrentPlay to nullptr and return
+	-If playerMove is 2 then return;
+
+*/
+
+void play(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame)
+{
+	vector <string> UserChoice;
+	string UserGuess;
+	int goldPegs = 0;
+	int silverPegs = 0;
+	int UserMoves = 0;
+	bool stop = false;
+
+	while(UserMoves == 0){
+		if(CurrentPlay == nullptr){
+			cout << endl;
+			cout << "No current game found" << endl;
+			return;
+		}
+		else if(CurrentPlay != nullptr){
+			cout << endl;
+			cout << "Turn " << CurrentPlay->GetIndexOfMove()  
+				<< ": Enter " << CurrentPlay->GetColumns()
+				<< " color or (S)top:" << endl;
+
+			for(int i = 0; i < CurrentPlay->GetColumns(); i++){
+				//cin.clear();
+				cin >> UserGuess; 
+				//cin.ignore(80,'\n');
+
+
+				if(UserGuess == "s" || UserGuess == "S"){
+					stop = true;
+					break;
+				}else{
+					UserChoice.push_back(UpperString(UserGuess));
+				}
+			}
+			cin.ignore(100,'\n');
+
+			if(stop == true){
+				cout << "Let take a break and try again" << endl;
+				cout << "Do you want to save this game?" << endl;
+				if (yesOrNo("(Y/N): ")){
+					cout << "Saving this game..." << endl;
+					save(CurrentPlay, OldGame);
+					return;
+				}
+				else{
+					cout << "Don't worry, you alway can resume and try again when you want" << endl;
+					return;
+				}
+			}
+			else{
+				if(static_cast <int> (UserChoice.size()) == CurrentPlay->GetColumns()){
+					UserMoves = CurrentPlay->MovePegs(UserChoice, goldPegs, silverPegs);
+					cout << "goldPegs pegs: " <<  goldPegs << endl;
+					cout << "silverPegs pegs: " << silverPegs << endl; 
+					UserChoice.clear();
+				}
+			}
+		}
+	}
+		if(UserMoves == 1 || UserMoves == -1){
+			if(UserMoves == 1){
+				cout << "Congratulation. You won! :)" << endl;
+				cout << "Destroying this game" << endl;
+				delete CurrentPlay;
+				CurrentPlay = nullptr;
+				return;
+			}
+			else{
+				cout << "Sorry. You lose! :(" << endl;
+				cout << "Destroying game" << endl;
+				delete CurrentPlay;
+				CurrentPlay = nullptr;
+				return;
+			}
+		}
+		else if(UserMoves == 2){ 
+			return;
+		}
+}
+
+/*UpperString - format string to uppercase
+	string s- user input string
+	return upper string value
+
+	Algorithm- using for loop to loop through the string and then user another var to hold uppercase of the string
+	After that, return the uppercase value
+*/
+
+string UpperString(string input){
+	string value;
+    for(size_t i = 0; i < input.length(); i++){
+        value += toupper(input[i]);
+    }
+    return value;
     
-    while(UserMove == 0){
-        if(current == NULL){
-            cout << endl;
-            cout << "No current game" << endl;
-            return;
-        }
-        else{
-            cout << endl;
-            cout << "turn " << current->GetIndexOfMove()
-                << ": Enter " << current->GetColumns()
-                << " Color or (S)top:" << endl;
+}
 
-            for(int i = 0; i < current->GetColumns(); i++){
-                cin >> guess;
-
-                if(guess == "S" || guess == "s"){
-                    stop = true;
-                    break;
-                }else{
-                    for(unsigned int i = 0; i < guess.length(); i++){
-                        newGuess += toupper(guess[i]);
-                    }
-                    UserChoice.push_back(newGuess);
-                }
-            }
-            cin.ignore(100, '\n');
-
-            if(stop){
-                char YesNo;
-                cout << "Do you want to save the game?" << endl;
-                cout << "Y/y or N/n" << endl;
-                cin >> YesNo;
-
-
-                while(toupper(YesNo) != 'Y' || toupper(YesNo) != 'N'){
-                    if(tolower(YesNo) == 'y'){
-                        cout << "Saving game" << endl;
-                        save(current, saved);
-                        return;
-                    }
-                    if(tolower(YesNo) == 'n'){
-                        cout << "You can return to the game later" << endl;
-                        return;
-                    }
-                }
-            }else{
-                if(static_cast<int> (UserChoice.size()) == current->GetColumns()){
-                    UserMove = current->MovePegs(UserChoice, gold, silver);
-                    cout << "Current gold pegs: " << gold << endl;
-                    cout << "Current silver pegs: " << silver << endl;
-                    UserChoice.clear();
-                }
-            }
-        }
-    }
-
-    if(UserMove == 1 || UserMove == -1){
-        if(UserMove == 1){
-            cout << "Congratulations, you won" << endl;
-            cout << "delete the current game" << endl;
-            cout << "Game solution: " << endl;
-            current->getSolution();
-            delete current;
-            current = NULL;;
-            return;
-        }else{
-            cout << "Sorry, you lose" << endl;
-            cout << "Delete the game" << endl;
-            cout << "Game solution: " << endl;
-            current->getSolution();
-            delete current;
-            current = NULL;
-            return;
-        }
-    }
-    else if(UserMove == 2){
-        return;
-    }
+void asciiArt(){
+    cout << ".___  ___.      ___           _______.___________. _______ .______      .___  ___.  __  .__   __.  _______ \n "  
+         << "|   ||   |     /   |         /       |           ||   ____||   _  |    |   ||   | |  | |  | |  | |       | \n"
+         << "|  |  /  |    /  ^  |       |   (----`---|  |----`|  |__   |  |_)  |    |  |  /  | |  | |   ||  | |  .--.  | \n"
+         << "|  ||||  |   /  /_|  |       |   |       |  |     |   __|  |      /     |  ||||  | |  | |  . `  | |  |  |  | \n"
+         << "|  |  |  |  /  _____  |  .----)   |      |  |     |  |____ |  |  |----.|  |  |  | |  | |  ||   | |  '--'  | \n"
+         << "|__|  |__| /__/     |__| |_______/       |__|     |_______|| _| `._____||__|  |__| |__| |__| |__| |_______/ \n" << endl;
 }
