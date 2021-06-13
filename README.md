@@ -32,7 +32,8 @@ make clean
 - Let 2 users play together
 
 **Notes**
-If there are any errors or trouble with run the game, please make a pull request
+- If there are any errors or trouble with run the game, please make a pull request
+- This is 1st year school project, if anyone want me to remove it, please contact, I will pull it down.
 
 **REFERENCE**
 [Mastermind Game](https://en.wikipedia.org/wiki/Mastermind_(board_game))
