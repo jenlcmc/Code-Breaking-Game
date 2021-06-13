@@ -1,11 +1,11 @@
 game: mainGame.o mastermindDrive.o
-	g++ -g mainGame.o mastermindDrive.o -o game
+	g++ mainGame.o mastermindDrive.o -o game
 
 main: mainGame.cpp
-	g++ -g -c mainGame.cpp
+	g++ -c mainGame.cpp
 
 mastermind: mastermindDrive.cpp
-	g++ -g -c mastermindDrive.cpp
+	g++  -c mastermindDrive.cpp
 
 clean:
 	rm mainGame.o

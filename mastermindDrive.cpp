@@ -1,6 +1,7 @@
 #include "mastermindDrive.h"
 #include <vector>
 #include <string>
+#include <iostream>
 using namespace std;
 
 /*MastermindLayout - constructor that sets the size of solution vector and assignseach element to contain"red", 
@@ -43,7 +44,7 @@ MastermindLayout::MastermindLayout(vector<string> UserGame)
     }
 
     MaxMoves = 6;
-    GameMove = 0;
+    GameMove = UserScore = MachineScore = 0;
 }
 
 /*move - this function simulates one move/round of the MastermindLayout game. 
@@ -104,6 +105,12 @@ int MastermindLayout::MovePegs(vector<string> playerMove, int& gold, int& silver
     return 3;
 }
 
+void MastermindLayout::getSolution(){
+    for(auto i : GameSolution){
+        cout << i << " " << endl;
+    }
+}
+
 /*getMoveIndex - get move index
     return move + 1
 
@@ -122,4 +129,17 @@ int MastermindLayout::GetIndexOfMove() const
 int MastermindLayout::GetColumns() const
 {   
     return(GameSolution.size()); 
+}
+
+void MastermindLayout::ScoreTracking(int& initial){
+    if(initial == 1){
+        UserScore = UserScore + 1;
+    }else{
+        MachineScore = MachineScore +1;
+    }
+    cout << "+---------------+" << endl;
+    cout << "| Scoring board |" << endl;
+    cout << "+---------------+" << endl;
+    cout << "User score: " << UserScore << endl;
+    cout << "Machine score: " << MachineScore << endl;
 }

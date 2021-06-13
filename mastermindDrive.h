@@ -11,9 +11,12 @@ class MastermindLayout{
         int GetIndexOfMove() const;
         int GetColumns() const;
         void getSolution();
+        void ScoreTracking(int&);
 
     private:
         int MaxMoves;
         vector<string> GameSolution;
         int GameMove;
+        int UserScore;
+        int MachineScore;
 };

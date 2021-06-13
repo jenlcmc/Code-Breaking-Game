@@ -20,7 +20,10 @@ int main(){
 		cout << "p/P - play game \n"
             << "l/L - load game \n"
             << "c/C - continue game \n"
-            << "q/Q - quit game " << endl;
+            << "q/Q - quit game \n \n"
+			<< "The game will have combination of 5 colors: yellow, blue, green, red, white. \n"
+			<< "In addition, there will be random combination that will have duplicate colors \n"
+			<< "You will have 6 chances to guess \n" << endl;
 
 		cin >> UserChoice;
 		cin.ignore(); //extra to prevent skipping
@@ -98,10 +101,6 @@ void setup(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame){
     shuffle(begin(ColorVec), end(ColorVec), seed);
     
     UserChoice = ColorVec;
-    //test
-    for(int i = 0; i < UserChoice.size(); i++){
-        cout << UserChoice[i] << endl;
-    }
 
 	if(CurrentPlay == nullptr){
 		CurrentPlay = new MastermindLayout(UserChoice); 
@@ -258,6 +257,7 @@ void play(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame)
 	int goldPegs = 0;
 	int silverPegs = 0;
 	int UserMoves = 0;
+	int Score;
 	bool stop = false;
 
 	while(UserMoves == 0){
@@ -275,17 +275,22 @@ void play(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame)
 			for(int i = 0; i < CurrentPlay->GetColumns(); i++){
 				//cin.clear();
 				cin >> UserGuess; 
+				UserGuess = ConvertString(UserGuess);
 				//cin.ignore(80,'\n');
-
 
 				if(UserGuess == "s" || UserGuess == "S"){
 					stop = true;
 					break;
 				}else{
 					UserChoice.push_back(UpperString(UserGuess));
+					
 				}
 			}
 			cin.ignore(100,'\n');
+
+			for(auto i : UserChoice){
+				cout << "User Guess: " << i << endl;
+			}
 
 			if(stop == true){
 				cout << "Let take a break and try again" << endl;
@@ -312,15 +317,29 @@ void play(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame)
 	}
 		if(UserMoves == 1 || UserMoves == -1){
 			if(UserMoves == 1){
-				cout << "Congratulation. You won! :)" << endl;
-				cout << "Destroying this game" << endl;
+				Score = 1;
+				cout << endl << "Congratulation. You won! :)" << endl;
+				cout << "Destroying this game \n" << endl;
+                cout << "Here is the game solution: " << endl;
+
+                CurrentPlay->getSolution();
+				cout << endl;
+				CurrentPlay->ScoreTracking(Score);
+				
 				delete CurrentPlay;
 				CurrentPlay = nullptr;
 				return;
 			}
 			else{
-				cout << "Sorry. You lose! :(" << endl;
-				cout << "Destroying game" << endl;
+				Score = 2;
+				cout << endl << "Sorry. You lose! :(" << endl;
+				cout << "Destroying game \n" << endl;
+                cout << "Here is the game solution: " << endl;
+
+                CurrentPlay->getSolution();
+				cout << endl;
+				CurrentPlay->ScoreTracking(Score);
+
 				delete CurrentPlay;
 				CurrentPlay = nullptr;
 				return;
@@ -355,4 +374,19 @@ void asciiArt(){
          << "|  ||||  |   /  /_|  |       |   |       |  |     |   __|  |      /     |  ||||  | |  | |  . `  | |  |  |  | \n"
          << "|  |  |  |  /  _____  |  .----)   |      |  |     |  |____ |  |  |----.|  |  |  | |  | |  ||   | |  '--'  | \n"
          << "|__|  |__| /__/     |__| |_______/       |__|     |_______|| _| `._____||__|  |__| |__| |__| |__| |_______/ \n" << endl;
+}
+
+string ConvertString(string guess){
+	if(guess == "r"){
+		guess = "red";
+	}else if(guess == "b"){
+		guess = "blue";
+	}else if(guess == "w"){
+		guess = "white";
+	}else if(guess == "g"){
+		guess = "green";
+	}else if(guess == "y"){
+		guess = "yellow";
+	}
+	return guess;
 }

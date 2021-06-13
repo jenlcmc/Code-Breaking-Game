@@ -8,3 +8,4 @@ void play(MastermindLayout*&, MastermindLayout*&);
 string UpperString(string);
 void asciiArt();
 bool yesOrNo(string msg);
+string ConvertString(string);
