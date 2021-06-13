@@ -1,8 +1,13 @@
 # mastermind
 - A simple mastermind board game that the user will have to guess the combination of random colors. 
-- There is 5 colors: yellow, green, blue, red, white. 
+- There is 6 colors: yellow, green, blue, red, white, pink. 
 - The combination of colors can be duplicate. 
 - The user will have 6 chances to guess the colors combination.
+- The user can enter either full string or char of the color
+
+``` Ex: r or red for red color
+```
+
 - The game has save function that will let the user to save the game. 
 - It also has function that remember the current game and let the user comeback to plays later.
 
@@ -28,3 +33,6 @@ make clean
 
 **Notes**
 If there are any errors or trouble with run the game, please make a pull request
+
+**REFERENCE**
+[Mastermind Game](https://en.wikipedia.org/wiki/Mastermind_(board_game))

@@ -87,7 +87,7 @@ int main(){
 */
 
 void setup(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame){
-    string Color[10] = {"yellow", "green", "blue", "red", "red", "blue", "green", "yellow", "white", "white"};
+    string Color[12] = {"yellow", "green", "blue", "red", "red", "blue", "green", "yellow", "white", "white", "pink", "pink"};
     char YesNo;
     vector<string> ColorVec;
     vector<string> UserChoice;
@@ -387,6 +387,8 @@ string ConvertString(string guess){
 		guess = "green";
 	}else if(guess == "y"){
 		guess = "yellow";
+	}else if(guess == "p"){
+		guess = "pink";
 	}
 	return guess;
 }
