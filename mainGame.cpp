@@ -1,10 +1,10 @@
+#include "mastermindDrive.h"
+#include "mainGame.h"
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
 #include <algorithm>
 #include <random>
-#include "mastermindDrive.h"
-#include "mainGame.h"
 using namespace std;
 
 
@@ -68,13 +68,7 @@ int main(){
 }
 
 /*setup - this function creates a new game
-
-	MastermindLayout*& CurrentPlay - points to a MastermindLayout object of the current game in play
-	MastermindLayout*& OldGame - points toaMastermindLayoutobject of a saved game.
-	return void
-
-	Algorithm - using while loop to take user input and only break if user input is = and player size > 0.
-	If user input is 0 and less size == 0, then output messages and repromp the user until they enter correct format.
+	Algorithm - make a array of color and then random shuffle the colors 
 	After that, pushback user input into vector. Check to see if CurrentPlay is nullptr or not. 
 	If there is a current game in progress, ask the user if they wish to save the game using yes/no function, 
 	if they wish to save the game call the save function 
@@ -131,10 +125,6 @@ void setup(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame){
 }
 
 /*save - this function saves a current game
-	MastermindLayout*& CurrentPlay - points to a MastermindLayout object of the current game in play
-	MastermindLayout*& OldGame - points toaMastermindLayoutobject of a saved game.
-	return void
-
 	Algorithm - If there is no saved game, set save to CurrentPlay and assign CurrentPlay to nullptr and exit function
 	If there is a saved game, ask the user if they still want to save over the OldGame using yes/no function
 	if they want to save over, deallocate OldGame and set it to CurrentPlay, then set CurrentPlay to nullptr
@@ -166,10 +156,6 @@ void save(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame){
 
 
 /*save - this function load a current game and save game
-	MastermindLayout*& CurrentPlay - points to a MastermindLayout object of the current game in play
-	MastermindLayout*& OldGame - points toaMastermindLayoutobject of a saved game.
-	return void
-
 	Algorithm - If there is no saved game, exit out of the function
 	If there is a current game, ask the user if they wish to destroy this game with yes/no function
 	If they do, destroy the game and Set current game with the game in saved game and set saved game to nullptr
@@ -232,10 +218,6 @@ bool yesOrNo(string msg)
 }
 
 /*play- user interact to play the game
-	MastermindLayout*& CurrentPlay - points to a MastermindLayout object of the current game in play
-	MastermindLayout*& OldGame - points toaMastermindLayoutobject of a saved game.
-	return void
-
 	Algorithm- using outer while loop to continue loop if the playermove that take return value from move() == 0
 	Inside while loop, check if CurrentPlay is nullptr or not. If nullptr, output error, and return. Otherwise, prompt the user
 	using getMOveIndex() and getNumberOfColumn. Then using for loop to loop through solution size and get user input.
@@ -351,9 +333,6 @@ void play(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame)
 }
 
 /*UpperString - format string to uppercase
-	string s- user input string
-	return upper string value
-
 	Algorithm- using for loop to loop through the string and then user another var to hold uppercase of the string
 	After that, return the uppercase value
 */
