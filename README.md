@@ -30,6 +30,7 @@ make clean
 
 **Upcoming function**
 - Let 2 users play together
+- Add highest scoreboard
 
 **Notes**
 - If there are any errors or trouble with run the game, please make a pull request
