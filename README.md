@@ -11,29 +11,29 @@
 - The game has save function that will let the user to save the game. 
 - It also has function that remember the current game and let the user comeback to plays later.
 
-**Requirements**
+## Requirements
 
 - gcc compiler
 - C++ 11 and above
 
-**To compile the files**
+## To compile the files
 ```
 make
 ```
 
 The result will be the **game** file 
 
-**To run the file**
+## To run the file
 ```
 ./game
 ```
 
-**To remove all the .o and execute files**
+## To remove all the .o and execute files
 ```
 make clean
 ```
 
-**Remove VSCode folers**
+## Remove VSCode folers
 
 .vscode folders are used for running and debugging within VS Code text editor
 
@@ -45,16 +45,16 @@ ls -la //.vscode folder should be visible
 rm -rf .vscode
 ```
 
-**Known Issues**
+## Known Issues
 - Scoreboard not function correctly
 
-**Upcoming function**
+## Upcoming function
 - Let 2 users play together
 - Add highest scoreboard
 
-**Notes**
+## Notes
 - If there are any errors or trouble with run the game, please make a pull request
 - This is 1st year school project, if anyone want me to remove it, please contact, I will pull it down.
 
-**REFERENCE**
+## REFERENCE
 [Mastermind Game](https://en.wikipedia.org/wiki/Mastermind_(board_game))
