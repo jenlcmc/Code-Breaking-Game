@@ -16,6 +16,4 @@ class MastermindLayout{
         int MaxMoves;
         vector<string> GameSolution;
         int GameMove;
-        int UserScore;
-        int MachineScore;
 };

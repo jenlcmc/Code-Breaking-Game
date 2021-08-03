@@ -36,7 +36,7 @@ MastermindLayout::MastermindLayout(vector<string> UserGame)
     }
 
     MaxMoves = 6;
-    GameMove = UserScore = MachineScore = 0;
+    GameMove = 0;
 }
 
 /*move - this function simulates one move/round of the MastermindLayout game. 
@@ -107,5 +107,3 @@ int MastermindLayout::GetColumns() const
 {   
     return(GameSolution.size()); 
 }
-
-
