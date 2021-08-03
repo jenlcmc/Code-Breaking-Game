@@ -13,6 +13,12 @@ int main(){
 	MastermindLayout * OldGame = nullptr;
 	char UserChoice;
 	bool endGame = false;
+	int row;
+	int matchCount = 0;
+
+	cout << "Please enter how many times you want to play: ";
+	cin >> row;
+
 
 	do{
 		cout << endl;
@@ -45,13 +51,15 @@ int main(){
 
 			case 'Q':
 				endGame = true;
+				matchCount++;
 				break;
 
 			default:
 				cout << "Wrong option. Choose again" << endl;
 				break;
 		}
-	}while(!endGame);
+		
+	}while(!endGame && matchCount < row);
 
 	//deallocate the objects if any are still left after
 	//user decides to quit
@@ -239,7 +247,7 @@ void play(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame)
 	int goldPegs = 0;
 	int silverPegs = 0;
 	int UserMoves = 0;
-	int Score;
+	bool Score = false;
 	bool stop = false;
 
 	while(UserMoves == 0){
@@ -269,10 +277,12 @@ void play(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame)
 				}
 			}
 			cin.ignore(100,'\n');
-
+			
+			cout << "User guesses: ";
 			for(auto i : UserChoice){
-				cout << "User Guess: " << i << endl;
+				cout << i << " ";
 			}
+			cout << endl;
 
 			if(stop == true){
 				cout << "Let take a break and try again" << endl;
@@ -299,28 +309,28 @@ void play(MastermindLayout*& CurrentPlay, MastermindLayout*& OldGame)
 	}
 		if(UserMoves == 1 || UserMoves == -1){
 			if(UserMoves == 1){
-				Score = 1;
+				Score = true;
 				cout << endl << "Congratulation. You won! :)" << endl;
 				cout << "Destroying this game \n" << endl;
                 cout << "Here is the game solution: " << endl;
 
                 CurrentPlay->getSolution();
 				cout << endl;
-				CurrentPlay->ScoreTracking(Score);
+				ScoreTracking(Score);
 				
 				delete CurrentPlay;
 				CurrentPlay = nullptr;
 				return;
 			}
 			else{
-				Score = 2;
+				Score = false;
 				cout << endl << "Sorry. You lose! :(" << endl;
 				cout << "Destroying game \n" << endl;
                 cout << "Here is the game solution: " << endl;
 
                 CurrentPlay->getSolution();
 				cout << endl;
-				CurrentPlay->ScoreTracking(Score);
+				ScoreTracking(Score);
 
 				delete CurrentPlay;
 				CurrentPlay = nullptr;
@@ -370,4 +380,25 @@ string ConvertString(string guess){
 		guess = "pink";
 	}
 	return guess;
+}
+
+/*ScoreTracking - keep track of the score (user and machine)
+    Algorithm - if user win -> +1 for user. Same with computer
+    Make a board and cout the result after the game end
+*/
+void ScoreTracking(bool initial){
+    int UserScore, MachineScore;
+	UserScore = MachineScore = 0;
+
+    if(initial){
+        UserScore = UserScore + 1;
+    }
+	if(!initial){
+        MachineScore = MachineScore + 1;
+    }
+    cout << "+---------------+" << endl;
+    cout << "| Scoring board |" << endl;
+    cout << "+---------------+" << endl;
+    cout << "User score: " << UserScore << endl;
+    cout << "Machine score: " << MachineScore << endl;
 }

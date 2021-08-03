@@ -108,19 +108,4 @@ int MastermindLayout::GetColumns() const
     return(GameSolution.size()); 
 }
 
-/*ScoreTracking - keep track of the score (user and machine)
-    Algorithm - if user win -> +1 for user. Same with computer
-    Make a board and cout the result after the game end
-*/
-void MastermindLayout::ScoreTracking(int& initial){
-    if(initial == 1){
-        UserScore = UserScore + 1;
-    }else{
-        MachineScore = MachineScore +1;
-    }
-    cout << "+---------------+" << endl;
-    cout << "| Scoring board |" << endl;
-    cout << "+---------------+" << endl;
-    cout << "User score: " << UserScore << endl;
-    cout << "Machine score: " << MachineScore << endl;
-}
+

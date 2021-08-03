@@ -11,7 +11,6 @@ class MastermindLayout{
         int GetIndexOfMove() const;
         int GetColumns() const;
         void getSolution();
-        void ScoreTracking(int&);
 
     private:
         int MaxMoves;
