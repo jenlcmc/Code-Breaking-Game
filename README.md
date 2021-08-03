@@ -11,6 +11,11 @@
 - The game has save function that will let the user to save the game. 
 - It also has function that remember the current game and let the user comeback to plays later.
 
+**Requirements**
+
+- gcc compiler
+- C++ 11 and above
+
 **To compile the files**
 ```
 make
@@ -27,6 +32,21 @@ The result will be the **game** file
 ```
 make clean
 ```
+
+**Remove VSCode folers**
+
+.vscode folders are used for running and debugging within VS Code text editor
+
+.vscode folder may be hidden in Unix like system but vissible on Windows OS to find remove from terminal/powershell:
+
+```
+ls -la //.vscode folder should be visible
+
+rm -rf .vscode
+```
+
+**Known Issues**
+- Scoreboard not function correctly
 
 **Upcoming function**
 - Let 2 users play together
