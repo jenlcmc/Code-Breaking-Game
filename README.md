@@ -1,5 +1,6 @@
 # Code-Breaking Game(MM)
 - A simple mastermind board game that the user will have to guess the combination of random colors. 
+- User will need to enter how many rows they want to play first
 - There is 6 colors: yellow, green, blue, red, white, pink. 
 - The combination of colors can be duplicate. 
 - The user will have 6 chances to guess the colors combination.
